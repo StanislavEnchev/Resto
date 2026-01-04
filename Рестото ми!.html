@@ -2,7 +2,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Превалутиране BGN ⇄ EUR + ресто</title>
+<title>Рестото ми!</title>
 <style>
   body {
     background-color: #f2e5d5; /* Бежов фон */
@@ -58,7 +58,7 @@
 </style>
 </head>
 <body>
-<h1>Превалутиране BGN ⇄ EUR + ресто</h1><button style="width:auto;padding:6px 10px;font-size:12px;" onclick="toggleDarkMode()">🌙</button>
+<h1>Рестото ми!</h1><button style="width:auto;padding:6px 10px;font-size:12px;" onclick="toggleDarkMode()">🌙</button> <button style="width:auto;padding:6px 10px;font-size:12px;margin-left:5px;" onclick="toggleLanguage()">🌐</button>
 
 <label>Цена:</label> <input type="number" step="0.01" id="price" placeholder="0" />
 
@@ -92,6 +92,24 @@ function calculate() {
     `Цена: ${priceBGN.toFixed(2)} лв (${priceEUR.toFixed(2)} €)<br>
      Курс: 1 € = ${rate} лв<br>
      Ресто: ${changeBGN.toFixed(2)} лв (${changeEUR.toFixed(2)} €)`;
+}
+function toggleLanguage() {
+  const current = document.documentElement.lang;
+  if (current === 'bg') {
+    document.documentElement.lang = 'en';
+    document.querySelector('h1').textContent = 'My change!';
+    document.querySelectorAll('label')[0].textContent = 'Price:';
+    document.querySelectorAll('label')[1].textContent = 'Currency:';
+    document.querySelectorAll('label')[2].textContent = 'Amount Paid (BGN):';
+    document.querySelector('button[onclick="calculate()"]').textContent = 'Calculate';
+  } else {
+    document.documentElement.lang = 'bg';
+    document.querySelector('h1').textContent = 'Рестото ми!';
+    document.querySelectorAll('label')[0].textContent = 'Цена:';
+    document.querySelectorAll('label')[1].textContent = 'Валута:';
+    document.querySelectorAll('label')[2].textContent = 'Сума на плащане (лв):';
+    document.querySelector('button[onclick="calculate()"]').textContent = 'Изчисли';
+  }
 }
 </script></body>
 </html>
