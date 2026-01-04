@@ -1,45 +1,89 @@
-<!DOCTYPE html><html lang="bg">
-<head>
+<!DOCTYPE html><html lang="bg"><head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Рестото ми!</title>
 <style>
   body {
-    background-color: #f2e5d5; /* Бежов фон */
+    background-color: #f2e5d5;
     font-family: Arial, sans-serif;
     padding: 20px;
   }
-  h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
-  label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-  }
+  h1 { font-size: 28px; margin-bottom: 20px; }
+  label { display: block; margin-top: 15px; font-weight: bold; }
   input, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: 1px solid #aaa;
-    background: #ffffff;
-    font-size: 16px;
-}
-  button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 20px;
-    font-size: 18px;
-    background-color: #e6e6e6;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    width: 100%; padding: 10px; margin-top: 5px;
+    border-radius: 6px; border: 1px solid #aaa;
+    background: #ffffff; font-size: 16px;
   }
-  #result {
-    margin-top: 25px;
-    font-size: 18px;
+  button {
+    width: 100%; padding: 12px; margin-top: 20px;
+    font-size: 18px; background-color: #e6e6e6;
+    border: none; border-radius: 6px; cursor: pointer;
+  }
+  #result { margin-top: 25px; font-size: 18px; font-weight: bold; }
+  body.dark { background-color: #1e1e1e; color: #f2f2f2; }
+  body.dark input, body.dark select { background: #333; color: #fff; border: 1px solid #666; }
+  body.dark button { background-color: #555; color: #fff; }
+</style>
+</head>
+<body>
+<h1>Рестото ми!</h1>
+<button style="width:auto;padding:6px 10px;font-size:12px;" onclick="toggleDarkMode()">🌙</button>
+<button style="width:auto;padding:6px 10px;font-size:12px;margin-left:5px;" onclick="toggleLanguage()">🌐</button><label>Цена:</label> <input type="number" step="0.01" id="price" placeholder="0" /> <label>Валута:</label> <select id="currency">
+
+  <option value="EUR">EUR (€)</option>
+  <option value="BGN">BGN (лв)</option>
+</select>
+<label>Сума на плащане (лв):</label> <input type="number" step="0.01" id="paid" placeholder="0" /><button id="calculateBtn" onclick="calculate()">Изчисли</button>
+
+<div id="result"></div><script>
+function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+}
+
+function calculate() {
+  const priceInput = parseFloat(document.getElementById('price').value.replace(',', '.'));
+  const paidBGN = parseFloat(document.getElementById('paid').value);
+  const currency = document.getElementById('currency').value;
+  const rate = 1.95583;
+
+  if (isNaN(priceInput) || isNaN(paidBGN)) {
+    document.getElementById('result').innerHTML = 'Моля, попълнете всички полета.';
+    return;
+  }
+
+  let priceBGN = 0, priceEUR = 0;
+  if (currency === 'EUR') { priceEUR = priceInput; priceBGN = priceInput * rate; }
+  else if (currency === 'BGN') { priceBGN = priceInput; priceEUR = priceInput / rate; }
+
+  const changeBGN = paidBGN - priceBGN;
+  const changeEUR = changeBGN / rate;
+
+  document.getElementById('result').innerHTML =
+    `Цена: ${priceBGN.toFixed(2)} лв (${priceEUR.toFixed(2)} €)<br>Курс: 1 € = ${rate} лв<br>Ресто: ${changeBGN.toFixed(2)} лв (${changeEUR.toFixed(2)} €)`;
+}
+
+function toggleLanguage() {
+  const current = document.documentElement.lang;
+  const calcBtn = document.getElementById('calculateBtn');
+  if (current === 'bg') {
+    document.documentElement.lang = 'en';
+    document.querySelector('h1').textContent = 'My change!';
+    document.querySelectorAll('label')[0].textContent = 'Price:';
+    document.querySelectorAll('label')[1].textContent = 'Currency:';
+    document.querySelectorAll('label')[2].textContent = 'Amount Paid (BGN):';
+    calcBtn.textContent = 'Calculate';
+  } else {
+    document.documentElement.lang = 'bg';
+    document.querySelector('h1').textContent = 'Рестото ми!';
+    document.querySelectorAll('label')[0].textContent = 'Цена:';
+    document.querySelectorAll('label')[1].textContent = 'Валута:';
+    document.querySelectorAll('label')[2].textContent = 'Сума на плащане (лв):';
+    calcBtn.textContent = 'Изчисли';
+  }
+}
+</script></body>
+</html>    font-size: 18px;
     font-weight: bold;
   }
   body.dark {
@@ -113,3 +157,4 @@ function toggleLanguage() {
 }
 </script></body>
 </html>
+
