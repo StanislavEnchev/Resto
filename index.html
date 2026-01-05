@@ -11,23 +11,52 @@
     font-family: Arial, sans-serif;
     padding: 20px;
   }
+
   h1 { font-size: 28px; margin-bottom: 20px; }
   label { display: block; margin-top: 15px; font-weight: bold; }
-  input, select {
-    width: 100%; padding: 10px; margin-top: 5px;
-    border-radius: 6px; border: 1px solid #aaa;
-    background: #ffffff; font-size: 16px;
-  }
-  button {
-    width: 100%; padding: 12px; margin-top: 20px;
-    font-size: 18px; background-color: #e6e6e6;
-    border: none; border-radius: 6px; cursor: pointer;
-  }
-  #result { margin-top: 25px; font-size: 18px; font-weight: bold; }
 
+  input, select {
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    background: #ffffff;
+    font-size: 16px;
+  }
+
+  /* Полето за валута — 33% ширина */
+  .currency-small {
+    width: 33%;
+    display: inline-block;
+  }
+
+  /* Другите полета — пълна ширина */
+  .full {
+    width: 100%;
+  }
+
+  /* Иконите – по-малки, без фон и без рамка */
+  .iconBtn {
+    background: none;
+    border: none;
+    font-size: 18px;    /* намалени от 24px → 18px */
+    cursor: pointer;
+    padding: 2px 6px;
+  }
+
+  #result {
+    margin-top: 25px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  /* Тъмен режим */
   body.dark { background-color: #1e1e1e; color: #f2f2f2; }
-  body.dark input, body.dark select { background: #333; color: #fff; border: 1px solid #666; }
-  body.dark button { background-color: #555; color: #fff; }
+  body.dark input, body.dark select {
+    background: #333;
+    color: #fff;
+    border: 1px solid #666;
+  }
 </style>
 
 </head>
@@ -35,23 +64,22 @@
 
 <h1>Рестото ми!</h1>
 
-<button style="width:auto;padding:6px 10px;font-size:12px;" onclick="toggleDarkMode()">🌙</button>
-<button style="width:auto;padding:6px 10px;font-size:12px;margin-left:5px;" onclick="toggleLanguage()">🌐</button>
-<button style="width:auto;padding:6px 10px;font-size:12px;margin-left:5px;" onclick="clearFields()">🧽</button>
+<!-- Иконите -->
+<button class="iconBtn" onclick="toggleDarkMode()">🌙</button>
+<button class="iconBtn" onclick="toggleLanguage()">🌐</button>
+<button class="iconBtn" onclick="clearFields()">🧹</button>
 
 <label>Цена:</label>
-<input type="number" step="0.01" id="price" placeholder="0" />
+<input type="number" step="0.01" id="price" placeholder="0" class="full" oninput="calculate()" />
 
 <label>Валута:</label>
-<select id="currency">
+<select id="currency" class="currency-small" oninput="calculate()">
   <option value="EUR">EUR (€)</option>
   <option value="BGN">BGN (лв.)</option>
 </select>
 
 <label>Сума на плащане (лв.):</label>
-<input type="number" step="0.01" id="paid" placeholder="0" />
-
-<button id="calculateBtn" onclick="calculate()">Изчисли</button>
+<input type="number" step="0.01" id="paid" placeholder="0" class="full" oninput="calculate()" />
 
 <div id="result"></div>
 
@@ -74,23 +102,25 @@ function calculate() {
   }
 
   let priceBGN = 0, priceEUR = 0;
-  if (currency === 'EUR') { priceEUR = priceInput; priceBGN = priceInput * rate; }
-  else if (currency === 'BGN') { priceBGN = priceInput; priceEUR = priceInput / rate; }
+  if (currency === 'EUR') {
+    priceEUR = priceInput;
+    priceBGN = priceInput * rate;
+  } else {
+    priceBGN = priceInput;
+    priceEUR = priceInput / rate;
+  }
 
   const changeBGN = paidBGN - priceBGN;
   const changeEUR = changeBGN / rate;
 
-  if (lang === 'bg') {
-    document.getElementById('result').innerHTML =
-      `Цена: ${priceBGN.toFixed(2)} лв. (${priceEUR.toFixed(2)} €)<br>
-       Курс: 1 € = ${rate} лв.<br>
-       Ресто: ${changeBGN.toFixed(2)} лв. (${changeEUR.toFixed(2)} €)`;
-  } else {
-    document.getElementById('result').innerHTML =
-      `Price: ${priceBGN.toFixed(2)} lv. (${priceEUR.toFixed(2)} €)<br>
-       Rate: 1 € = ${rate} lv.<br>
-       Change: ${changeBGN.toFixed(2)} lv. (${changeEUR.toFixed(2)} €)`;
-  }
+  document.getElementById('result').innerHTML =
+    lang === 'bg'
+      ? `Цена: ${priceBGN.toFixed(2)} лв. (${priceEUR.toFixed(2)} €)<br>
+         Курс: 1 € = ${rate} лв.<br>
+         Ресто: ${changeBGN.toFixed(2)} лв. (${changeEUR.toFixed(2)} €)`
+      : `Price: ${priceBGN.toFixed(2)} lv. (${priceEUR.toFixed(2)} €)<br>
+         Rate: 1 € = ${rate} lv.<br>
+         Change: ${changeBGN.toFixed(2)} lv. (${changeEUR.toFixed(2)} €)`;
 }
 
 function clearFields() {
@@ -101,27 +131,22 @@ function clearFields() {
 
 function toggleLanguage() {
   const current = document.documentElement.lang;
-  const calcBtn = document.getElementById('calculateBtn');
 
   if (current === 'bg') {
     document.documentElement.lang = 'en';
-
-    document.querySelector('h1').textContent = 'My change!';
+    document.querySelector('h1').textContent = 'My Change!';
     document.querySelectorAll('label')[0].textContent = 'Price:';
     document.querySelectorAll('label')[1].textContent = 'Currency:';
     document.querySelectorAll('label')[2].textContent = 'Amount Paid (BGN):';
-
-    calcBtn.textContent = 'Calculate';
   } else {
     document.documentElement.lang = 'bg';
-
     document.querySelector('h1').textContent = 'Рестото ми!';
     document.querySelectorAll('label')[0].textContent = 'Цена:';
     document.querySelectorAll('label')[1].textContent = 'Валута:';
     document.querySelectorAll('label')[2].textContent = 'Сума на плащане (лв.):';
-
-    calcBtn.textContent = 'Изчисли';
   }
+
+  calculate();
 }
 </script>
 
