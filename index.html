@@ -10,17 +10,15 @@
     background-color: #f2e5d5;
     font-family: Arial, sans-serif;
     padding: 20px;
-    text-align: left; /* общият текст е ляв, заглавието ще е отделно */
+    text-align: left;
   }
 
-  /* Центрирано заглавие */
   h1 {
     font-size: 28px;
     margin-bottom: 10px;
     text-align: center;
   }
 
-  /* Центрирана лента с икони */
   .iconBar {
     text-align: center;
     margin-bottom: 20px;
@@ -41,8 +39,9 @@
     font-size: 16px;
   }
 
+  /* Малко по-дълго поле за валута */
   .currency-small {
-    width: 33%;
+    width: 40%;
     display: inline-block;
   }
 
@@ -70,12 +69,35 @@
     margin: 4px 0;
   }
 
-  /* Тъмен режим */
-  body.dark { background-color: #1e1e1e; color: #f2f2f2; }
+  /* Долна бележка за автора */
+  .author {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 16px;
+    color: #3399ff;
+  }
+  .author a {
+    color: #3399ff;
+    text-decoration: none;
+  }
+  .author a:hover {
+    text-decoration: underline;
+  }
+
+  body.dark { 
+    background-color: #1e1e1e; 
+    color: #f2f2f2; 
+  }
   body.dark input, body.dark select {
     background: #333;
     color: #fff;
     border: 1px solid #666;
+  }
+  body.dark .author {
+    color: #66b3ff;
+  }
+  body.dark .author a {
+    color: #66b3ff;
   }
 </style>
 
@@ -84,7 +106,6 @@
 
 <h1>Рестото ми!</h1>
 
-<!-- Центрирани икони -->
 <div class="iconBar">
   <button class="iconBtn" onclick="toggleDarkMode()">🌙</button>
   <button class="iconBtn" onclick="toggleLanguage()">🌐</button>
@@ -104,6 +125,11 @@
 <input type="number" step="0.01" id="paid" placeholder="0" class="full" oninput="calculate()" />
 
 <div id="result"></div>
+
+<!-- Автор -->
+<div class="author">
+  <a href="https://www.facebook.com/share/1GMumgTzrr/" target="_blank" id="authorText">от Станислав Енчев</a>
+</div>
 
 <script>
 function toggleDarkMode() {
@@ -160,12 +186,14 @@ function toggleLanguage() {
     document.querySelectorAll('label')[0].textContent = 'Price:';
     document.querySelectorAll('label')[1].textContent = 'Currency:';
     document.querySelectorAll('label')[2].textContent = 'Amount Paid (BGN):';
+    document.getElementById('authorText').textContent = 'by Stanislav Enchev';
   } else {
     document.documentElement.lang = 'bg';
     document.querySelector('h1').textContent = 'Рестото ми!';
     document.querySelectorAll('label')[0].textContent = 'Цена:';
     document.querySelectorAll('label')[1].textContent = 'Валута:';
     document.querySelectorAll('label')[2].textContent = 'Сума на плащане (лв.):';
+    document.getElementById('authorText').textContent = 'от Станислав Енчев';
   }
 
   calculate();
